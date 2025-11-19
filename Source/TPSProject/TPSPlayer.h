@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -26,29 +26,36 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	// Ä«¸Ş¶ó Boom (SpringArm)
+	// ì¹´ë©”ë¼ Boom (SpringArm)
 	UPROPERTY(EditAnywhere)
 	class USpringArmComponent* compArm;
 
-	// Ä«¸Ş¶ó Component
+	// ì¹´ë©”ë¼ Component
 	UPROPERTY(EditAnywhere)
 	class UCameraComponent* compCam;
 
-	// IMC ´ãÀ» º¯¼ö
+
+	// IMC ë‹´ì„ ë³€ìˆ˜
 	UPROPERTY(EditAnywhere)
 	class UInputMappingContext* imcTPSInput;
 	// W A S D Input Action
 	UPROPERTY(EditAnywhere)
 	class UInputAction* iaMove;
-	// ¸¶¿ì½º »óÇÏÁÂ¿ì Input Action
+	// ë§ˆìš°ìŠ¤ ìƒí•˜ì¢Œìš° Input Action
 	UPROPERTY(EditAnywhere)
 	class UInputAction* iaLookUp;
 	UPROPERTY(EditAnywhere)
 	class UInputAction* iaTurn;
+	// ì í”„ Input Action
+	UPROPERTY(EditAnywhere)
+	class UInputAction* iaJump;
+	
 
-	// W A S D ÀÔ·Â Ã³¸® ÇÔ¼ö
+	// W A S D ì…ë ¥ ì²˜ë¦¬ í•¨ìˆ˜
 	void Move(const struct FInputActionValue& value);
-	// ¸¶¿ì½º »óÇÏÁÂ¿ì ¿òÁ÷ÀÓ Ã³¸® ÇÔ¼ö
+	// ë§ˆìš°ìŠ¤ ìƒí•˜ì¢Œìš° ì›€ì§ì„ ì²˜ë¦¬ í•¨ìˆ˜
 	void LookUp(const struct FInputActionValue& value);
 	void Turn(const struct FInputActionValue& value);
+	// ì í”„ ì²˜ë¦¬ í•¨ìˆ˜
+	void JumpAction();
 };

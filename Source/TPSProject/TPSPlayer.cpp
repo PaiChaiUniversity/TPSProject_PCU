@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "TPSPlayer.h"
@@ -14,20 +14,22 @@ ATPSPlayer::ATPSPlayer()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// SpringArm Component »ı¼º
+	// SpringArm Component ìƒì„±
 	compArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("ARM"));
-	// RootComponent ¿¡ ÀÚ½ÄÀ¸·Î ÇÏÀÚ.	
+	// RootComponent ì— ìì‹ìœ¼ë¡œ í•˜ì.	
 	compArm->SetupAttachment(RootComponent);
-	// À§Ä¡¸¦ ¿À¸¥ÂÊ À§·Î ¹èÄ¡
+	// ìœ„ì¹˜ë¥¼ ì˜¤ë¥¸ìª½ ìœ„ë¡œ ë°°ì¹˜
 	compArm->SetRelativeLocation(FVector(0, 70, 110));
-	// Ä«¸Ş¶ó ´Ş¸®´Â À§Ä¡¸¦ 160 À¸·Î ÇÏÀÚ.
+	// ì¹´ë©”ë¼ ë‹¬ë¦¬ëŠ” ìœ„ì¹˜ë¥¼ 160 ìœ¼ë¡œ í•˜ì.
 	compArm->TargetArmLength = 160;
 
-	// Ä«¸Ş¶ó Component »ı¼º
+	// ì¹´ë©”ë¼ Component ìƒì„±
 	compCam = CreateDefaultSubobject<UCameraComponent>(TEXT("CAM"));
-	// compArm ÀÇ ÀÚ½ÄÀ¸·Î ÇÏÀÚ.
+	// compArm ì˜ ìì‹ìœ¼ë¡œ í•˜ì.
 	compCam->SetupAttachment(compArm);
 
+	// ë‚˜ì˜ ì›€ì§ì´ëŠ” ì†ë ¥ì„ 500 ìœ¼ë¡œ í•˜ì.	
+	GetCharacterMovement()->MaxWalkSpeed = 500;
 }
 
 // Called when the game starts or when spawned
@@ -35,7 +37,7 @@ void ATPSPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// IMC ¼³Á¤
+	// IMC ì„¤ì •
 	//APlayerController* pc = Cast<APlayerController>(Controller);
 	APlayerController* pc = GetWorld()->GetFirstPlayerController();
 	if (pc)
@@ -48,8 +50,7 @@ void ATPSPlayer::BeginPlay()
 		}
 	}	
 
-	// ³ªÀÇ ¿òÁ÷ÀÌ´Â ¼Ó·ÂÀ» 500 À¸·Î ÇÏÀÚ.	
-	GetCharacterMovement()->MaxWalkSpeed = 500;
+
 }
 
 // Called every frame
@@ -64,36 +65,40 @@ void ATPSPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	// Input ¼³Á¤
+	// Input ì„¤ì •
 	UEnhancedInputComponent* playerInput = Cast<UEnhancedInputComponent>(PlayerInputComponent);
 	if (playerInput)
 	{
-		// WASD Å° ´­·¶À» È£ÃâµÇ´Â ÇÔ¼ö µî·Ï
+		// WASD í‚¤ ëˆŒë €ì„ í˜¸ì¶œë˜ëŠ” í•¨ìˆ˜ ë“±ë¡
 		playerInput->BindAction(iaMove, ETriggerEvent::Triggered, this, &ATPSPlayer::Move);
-		// ¸¶¿ì½º »óÇÏÁÂ¿ì ¿òÁ÷ÀÏ ¶§ È£ÃâµÇ´Â ÇÔ¼ö µî·Ï
+		// ë§ˆìš°ìŠ¤ ìƒí•˜ì¢Œìš° ì›€ì§ì¼ ë•Œ í˜¸ì¶œë˜ëŠ” í•¨ìˆ˜ ë“±ë¡
 		playerInput->BindAction(iaLookUp, ETriggerEvent::Triggered, this, &ATPSPlayer::LookUp);
 		playerInput->BindAction(iaTurn, ETriggerEvent::Triggered, this, &ATPSPlayer::Turn);
+		// ìŠ¤í˜ì´ìŠ¤ ë°” ëˆŒë €ì„ ë•Œ í˜¸ì¶œë˜ëŠ” í•¨ìˆ˜ ë“±ë¡
+		playerInput->BindAction(iaJump, ETriggerEvent::Started, this, &ATPSPlayer::JumpAction);
 	}
 }
 
 void ATPSPlayer::Move(const FInputActionValue& value)
 {
-	// ÀÔ·Â °ªÀ» 2d º¤ÅÍ·Î ¾ò¾î¿ÀÀÚ.
+	// ì…ë ¥ ê°’ì„ 2d ë²¡í„°ë¡œ ì–»ì–´ì˜¤ì.
 	FVector2D inputValue = value.Get<FVector2D>();
 	//UE_LOG(LogTemp, Warning, TEXT("%f : %f"), inputValue.X, inputValue.Y);
 
-	// ÀÌµ¿ÇÒ ¹æÇâ ¸¸µéÀÚ. (¿ùµå ¹æÇâ)
+	// ì´ë™í•  ë°©í–¥ ë§Œë“¤ì. (ì›”ë“œ ë°©í–¥)
 	FVector dir = FVector(inputValue.X, inputValue.Y, 0);
-	// ³ª¸¦ ±âÁØÀ¸·Î ÇÏ´Â ¹æÇâÀ¸·Î ÀüÈ¯
+	// ë‚˜ë¥¼ ê¸°ì¤€ìœ¼ë¡œ í•˜ëŠ” ë°©í–¥ìœ¼ë¡œ ì „í™˜
 	dir = FTransform(GetControlRotation()).TransformVector(dir);
 	dir.Z = 0;
 
-	// Å©±â¸¦ 1·Î ¸¸µéÀÚ.
+	// í¬ê¸°ë¥¼ 1ë¡œ ë§Œë“¤ì.
 	dir.Normalize();
 
-	// dir ¹æÇâÀ¸·Î ¿òÁ÷ÀÌÀÚ.
+	// dir ë°©í–¥ìœ¼ë¡œ ì›€ì§ì´ì.
 	AddMovementInput(dir);
 }
+
+
 
 void ATPSPlayer::LookUp(const FInputActionValue& value)
 {
@@ -105,5 +110,10 @@ void ATPSPlayer::Turn(const FInputActionValue& value)
 {
 	float inputValue = value.Get<float>();
 	AddControllerYawInput(inputValue);
+}
+
+void ATPSPlayer::JumpAction()
+{
+	Jump();
 }
 

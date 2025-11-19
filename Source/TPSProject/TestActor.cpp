@@ -3,6 +3,7 @@
 
 #include "TestActor.h"
 
+
 // Sets default values
 ATestActor::ATestActor()
 {
@@ -17,6 +18,7 @@ void ATestActor::BeginPlay()
 	Super::BeginPlay();
 
 	TestPrint();	
+	
 }
 
 // Called every frame
