@@ -97,7 +97,7 @@ void ATPSPlayer::Move(const FInputActionValue& value)
 
 void ATPSPlayer::LookUp(const FInputActionValue& value)
 {
-	float inputValue = value.Get<float>();
+	float inputValue = -value.Get<float>();
 	AddControllerPitchInput(inputValue);
 }
 
