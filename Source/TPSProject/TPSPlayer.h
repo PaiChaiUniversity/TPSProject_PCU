@@ -40,7 +40,15 @@ public:
 	// W A S D Input Action
 	UPROPERTY(EditAnywhere)
 	class UInputAction* iaMove;
+	// 마우스 상하좌우 Input Action
+	UPROPERTY(EditAnywhere)
+	class UInputAction* iaLookUp;
+	UPROPERTY(EditAnywhere)
+	class UInputAction* iaTurn;
 
 	// W A S D 입력 처리 함수
 	void Move(const struct FInputActionValue& value);
+	// 마우스 상하좌우 움직임 처리 함수
+	void LookUp(const struct FInputActionValue& value);
+	void Turn(const struct FInputActionValue& value);
 };
