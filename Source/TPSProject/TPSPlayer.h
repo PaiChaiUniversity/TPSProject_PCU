@@ -49,7 +49,9 @@ public:
 	// 점프 Input Action
 	UPROPERTY(EditAnywhere)
 	class UInputAction* iaJump;
-	
+	// Fire Input Action
+	UPROPERTY(EditAnywhere)
+	class UInputAction* iaFire;	
 
 	// W A S D 입력 처리 함수
 	void Move(const struct FInputActionValue& value);
@@ -58,4 +60,6 @@ public:
 	void Turn(const struct FInputActionValue& value);
 	// 점프 처리 함수
 	void JumpAction();
+	// 공격 처리 함수
+	void Fire();
 };

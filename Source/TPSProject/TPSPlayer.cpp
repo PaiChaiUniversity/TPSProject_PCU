@@ -49,8 +49,6 @@ void ATPSPlayer::BeginPlay()
 			subSystem->AddMappingContext(imcTPSInput, 0);
 		}
 	}	
-
-
 }
 
 // Called every frame
@@ -76,6 +74,8 @@ void ATPSPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 		playerInput->BindAction(iaTurn, ETriggerEvent::Triggered, this, &ATPSPlayer::Turn);
 		// 스페이스 바 눌렀을 때 호출되는 함수 등록
 		playerInput->BindAction(iaJump, ETriggerEvent::Started, this, &ATPSPlayer::JumpAction);
+		// 마우스 왼쪽 버튼 눌렀을 때 호출되는 함수 등록
+		playerInput->BindAction(iaFire, ETriggerEvent::Started, this, &ATPSPlayer::Fire);
 	}
 }
 
@@ -116,4 +116,36 @@ void ATPSPlayer::JumpAction()
 {
 	Jump();
 }
+
+void ATPSPlayer::Fire()
+{
+	// LineTrace 로 부딪힌 곳 찾아내자.
+	// 시작 지점
+	FVector startPos = compCam->GetComponentLocation();
+	// 끝 지점
+	FVector endPos = startPos + compCam->GetForwardVector() * 100000;
+	// 그 외 옵션
+	FCollisionQueryParams params;
+	params.AddIgnoredActor(this);
+	// 부딪힌 결과를 담는 변수
+	FHitResult hitInfo;
+	// 위 정보를 이용해서 LineTrace 발사!
+	bool bHit = GetWorld()->LineTraceSingleByChannel(hitInfo, startPos, endPos, ECC_Camera, params);
+	// 만약에 어딘가 부딪혔다면
+	if (bHit)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s"), *hitInfo.GetActor()->GetActorNameOrLabel());
+		UE_LOG(LogTemp, Warning, TEXT("%s"), *hitInfo.Location.ToString());
+		UE_LOG(LogTemp, Warning, TEXT("%s"), *hitInfo.GetActor()->GetActorLocation().ToString());
+	}
+}
+
+
+
+
+
+
+
+
+
 
