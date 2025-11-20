@@ -7,6 +7,8 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "NiagaraFunctionLibrary.h"
+#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
 ATPSPlayer::ATPSPlayer()
@@ -134,9 +136,10 @@ void ATPSPlayer::Fire()
 	// 만약에 어딘가 부딪혔다면
 	if (bHit)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *hitInfo.GetActor()->GetActorNameOrLabel());
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *hitInfo.Location.ToString());
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *hitInfo.GetActor()->GetActorLocation().ToString());
+		// 맞은 지점의 Normal 방향으로 효과가 퍼지게 각도를 구하자.
+		FRotator rot = UKismetMathLibrary::MakeRotFromX(hitInfo.Normal);
+		// 부딪힌 위치에 파티클(나이아가라) 효과 표현
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), hitEffect, hitInfo.Location, rot);
 	}
 }
 

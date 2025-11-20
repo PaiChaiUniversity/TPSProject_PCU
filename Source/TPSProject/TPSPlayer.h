@@ -61,5 +61,11 @@ public:
 	// 점프 처리 함수
 	void JumpAction();
 	// 공격 처리 함수
+	UFUNCTION(BlueprintCallable)
 	void Fire();
+	
+
+	// 총 맞은 곳에 Effect
+	UPROPERTY(EditAnywhere)
+	class UNiagaraSystem* hitEffect;	
 };
